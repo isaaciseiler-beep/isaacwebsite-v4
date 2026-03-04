@@ -11,7 +11,7 @@ type FeedCarouselProps = {
   items: FeedItem[];
   index: number;
   onIndexChange: (index: number) => void;
-  onOpenPhoto: (photo: Photo) => void;
+  onOpenPhoto?: (photo: Photo) => void;
 };
 
 export default function FeedCarousel({ items, index, onIndexChange, onOpenPhoto }: FeedCarouselProps) {
@@ -20,6 +20,8 @@ export default function FeedCarousel({ items, index, onIndexChange, onOpenPhoto 
   const pointerStart = useRef<number | null>(null);
 
   const currentItem = items[index];
+  const previousItem = items[(index - 1 + items.length) % items.length];
+  const nextItem = items[(index + 1) % items.length];
 
   const go = (direction: 1 | -1) => {
     if (items.length <= 1) {
@@ -81,7 +83,7 @@ export default function FeedCarousel({ items, index, onIndexChange, onOpenPhoto 
       return;
     }
 
-    onOpenPhoto(currentItem);
+    onOpenPhoto?.(currentItem);
   };
 
   return (
@@ -99,39 +101,61 @@ export default function FeedCarousel({ items, index, onIndexChange, onOpenPhoto 
         }
       }}
     >
-      <button
-        type="button"
-        className={styles.card}
-        ref={cardRef}
-        onClick={onPrimaryAction}
-        onPointerDown={(event) => {
-          pointerStart.current = event.clientX;
-        }}
-        onPointerUp={(event) => {
-          if (pointerStart.current === null) {
-            return;
-          }
+      <div className={styles.track}>
+        <button type="button" className={styles.preview} onClick={() => go(-1)} aria-label="Previous slide">
+          <Image
+            src={previousItem.type === "linkedin" ? previousItem.coverSrc : previousItem.src}
+            alt={previousItem.type === "linkedin" ? previousItem.title : previousItem.location}
+            fill
+            sizes="220px"
+            className={styles.image}
+          />
+        </button>
 
-          const delta = event.clientX - pointerStart.current;
-          pointerStart.current = null;
+        <button
+          type="button"
+          className={styles.card}
+          ref={cardRef}
+          onClick={onPrimaryAction}
+          onPointerDown={(event) => {
+            pointerStart.current = event.clientX;
+          }}
+          onPointerUp={(event) => {
+            if (pointerStart.current === null) {
+              return;
+            }
 
-          if (Math.abs(delta) > 52) {
-            go(delta > 0 ? -1 : 1);
-          }
-        }}
-      >
-        <span className={styles.chip}>{body.chip}</span>
+            const delta = event.clientX - pointerStart.current;
+            pointerStart.current = null;
 
-        <div className={styles.imageWrap}>
-          <Image src={body.image} alt={body.title} fill sizes="(max-width: 1024px) 90vw, 920px" className={styles.image} />
-        </div>
+            if (Math.abs(delta) > 52) {
+              go(delta > 0 ? -1 : 1);
+            }
+          }}
+        >
+          <span className={styles.chip}>{body.chip}</span>
 
-        <div className={styles.text}>
-          <h3>{body.title}</h3>
-          <p>{body.text}</p>
-          {body.date ? <span>{new Date(body.date).toLocaleDateString()}</span> : null}
-        </div>
-      </button>
+          <div className={styles.imageWrap}>
+            <Image src={body.image} alt={body.title} fill sizes="(max-width: 1024px) 90vw, 920px" className={styles.image} />
+          </div>
+
+          <div className={styles.text}>
+            <h3>{body.title}</h3>
+            <p>{body.text}</p>
+            {body.date ? <span>{new Date(body.date).toLocaleDateString()}</span> : null}
+          </div>
+        </button>
+
+        <button type="button" className={styles.preview} onClick={() => go(1)} aria-label="Next slide">
+          <Image
+            src={nextItem.type === "linkedin" ? nextItem.coverSrc : nextItem.src}
+            alt={nextItem.type === "linkedin" ? nextItem.title : nextItem.location}
+            fill
+            sizes="220px"
+            className={styles.image}
+          />
+        </button>
+      </div>
 
       <div className={styles.controls}>
         <button type="button" aria-label="Previous slide" onClick={() => go(-1)}>

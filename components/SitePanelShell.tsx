@@ -24,14 +24,14 @@ export default function SitePanelShell({ mode, onModeChange, onOpenContact, chil
               className={classNames(styles.toggle, mode === "projects" && styles.active)}
               onClick={() => onModeChange("projects")}
             >
-              Projects
+              List
             </button>
             <button
               type="button"
               className={classNames(styles.toggle, mode === "feed" && styles.active)}
               onClick={() => onModeChange("feed")}
             >
-              Feed
+              Slider
             </button>
           </div>
 

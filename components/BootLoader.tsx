@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { usePrefersReducedMotion, safeDuration } from "@/lib/motion";
 import styles from "./BootLoader.module.scss";
@@ -22,26 +22,44 @@ export default function BootLoader({ children }: BootLoaderProps) {
   const reduced = usePrefersReducedMotion();
   const [lineIndex, setLineIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [choice, setChoice] = useState<"on" | "off" | null>(null);
   const [hidden, setHidden] = useState(false);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const progressValue = useRef({ value: 0 });
 
+  const reveal = useCallback(() => {
+    if (!overlayRef.current) {
+      setHidden(true);
+      return;
+    }
+
+    gsap.to(overlayRef.current, {
+      autoAlpha: 0,
+      duration: safeDuration(0.32, reduced),
+      ease: "power2.out",
+      onComplete: () => setHidden(true)
+    });
+  }, [reduced]);
+
   useEffect(() => {
-    const targetValue = reduced ? 100 : 96;
-    const duration = reduced ? 0.01 : 2.2;
+    const duration = reduced ? 0.14 : 2.2;
 
     const tween = gsap.to(progressValue.current, {
-      value: targetValue,
+      value: 100,
       duration,
       ease: "power1.out",
-      onUpdate: () => setProgress(Math.round(progressValue.current.value))
+      onUpdate: () => setProgress(Math.round(progressValue.current.value)),
+      onComplete: () => {
+        if (!window.localStorage.getItem("audioPreference")) {
+          window.localStorage.setItem("audioPreference", "off");
+        }
+        reveal();
+      }
     });
 
     return () => {
       tween.kill();
     };
-  }, [reduced]);
+  }, [reduced, reveal]);
 
   useEffect(() => {
     if (reduced) {
@@ -57,41 +75,6 @@ export default function BootLoader({ children }: BootLoaderProps) {
 
   const currentLine = useMemo(() => SYSTEM_LINES[lineIndex], [lineIndex]);
 
-  const reveal = () => {
-    if (!overlayRef.current) {
-      setHidden(true);
-      return;
-    }
-
-    gsap.to(overlayRef.current, {
-      autoAlpha: 0,
-      duration: safeDuration(0.36, reduced),
-      ease: "power2.out",
-      onComplete: () => setHidden(true)
-    });
-  };
-
-  const completeProgress = () => {
-    if (progress >= 100) {
-      reveal();
-      return;
-    }
-
-    gsap.to(progressValue.current, {
-      value: 100,
-      duration: safeDuration(progress < 96 ? 0.6 : 0.2, reduced),
-      ease: "power2.out",
-      onUpdate: () => setProgress(Math.round(progressValue.current.value)),
-      onComplete: reveal
-    });
-  };
-
-  const pickAudio = (value: "on" | "off") => {
-    setChoice(value);
-    window.localStorage.setItem("audioPreference", value);
-    completeProgress();
-  };
-
   return (
     <>
       {children}
@@ -101,24 +84,6 @@ export default function BootLoader({ children }: BootLoaderProps) {
             <p className={styles.line}>{currentLine}</p>
             <p className={styles.percent}>( {Math.min(100, progress)}% )</p>
             <p className={styles.helper}>{"// Hang tight, Explorer. The data transfer is in progress..."}</p>
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={styles.action}
-                data-selected={choice === "on"}
-                onClick={() => pickAudio("on")}
-              >
-                enter with audio
-              </button>
-              <button
-                type="button"
-                className={styles.action}
-                data-selected={choice === "off"}
-                onClick={() => pickAudio("off")}
-              >
-                enter without sound
-              </button>
-            </div>
           </div>
         </div>
       ) : null}

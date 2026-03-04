@@ -1,35 +1,54 @@
 @use "../styles/mixins" as *;
 
 .root {
-  width: min(920px, 100%);
+  width: min(1280px, 100%);
   display: grid;
-  gap: 0.55rem;
+  gap: 0.4rem;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.preview {
+  @include subtle-focus;
+  position: relative;
+  border: 0;
+  background: transparent;
+  width: 100%;
+  aspect-ratio: 3 / 5;
+  overflow: hidden;
+  opacity: 0.72;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .card {
   @include subtle-focus;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  background: #fff;
-  padding: 0.7rem;
+  border: 0;
+  background: transparent;
+  padding: 0;
   text-align: left;
   display: grid;
-  gap: 0.7rem;
+  gap: 0.45rem;
 }
 
 .chip {
   @include small-caps;
   justify-self: start;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  padding: 0.22rem 0.56rem;
+  color: rgba(17, 17, 17, 0.62);
+  padding: 0;
 }
 
 .imageWrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 8;
-  border-radius: 16px;
+  aspect-ratio: 3 / 5;
   overflow: hidden;
 }
 
@@ -39,19 +58,22 @@
 
 .text {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.25rem;
 
   h3 {
     margin: 0;
-    font-size: clamp(1rem, 2.5vw, 1.45rem);
-    line-height: 1.12;
+    font-size: clamp(0.8rem, 1.6vw, 1rem);
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.72rem;
     color: var(--color-muted);
-    line-height: 1.45;
+    line-height: 1.4;
+    max-width: 72ch;
   }
 
   span {
@@ -63,12 +85,12 @@
 .controls {
   justify-self: end;
   display: flex;
-  gap: 0.35rem;
+  gap: 0.22rem;
 
   button {
     @include subtle-focus;
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
     border: 1px solid var(--color-line);
     border-radius: 999px;
     background: #fff;
@@ -83,4 +105,15 @@
 .empty {
   color: var(--color-muted);
   font-size: 0.9rem;
+}
+
+@media (max-width: 980px) {
+  .track {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .preview {
+    display: none;
+  }
 }

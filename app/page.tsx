@@ -2,12 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { FeedItem, Photo, PROJECTS, getFeedItems } from "@/lib/content";
+import { FeedItem, PROJECTS, getFeedItems } from "@/lib/content";
 import BackgroundCrossfade from "@/components/BackgroundCrossfade";
 import ContactModal from "@/components/ContactModal";
 import FeedCarousel from "@/components/FeedCarousel";
-import Modal from "@/components/Modal";
 import ProjectsList from "@/components/ProjectsList";
 import SitePanelShell from "@/components/SitePanelShell";
 import styles from "./page.module.scss";
@@ -24,14 +22,15 @@ const toImageFromFeedItem = (item: FeedItem | undefined): string => {
 
 export default function HomePage() {
   const router = useRouter();
-  const feedItems = useMemo(() => getFeedItems(), []);
-  const photoItems = useMemo(() => feedItems.filter((item): item is Photo & { type: "photo" } => item.type === "photo"), [feedItems]);
+  const feedItems = useMemo(
+    () => getFeedItems().filter((item): item is FeedItem & { type: "linkedin" } => item.type === "linkedin"),
+    []
+  );
 
   const [mode, setMode] = useState<Mode>("feed");
   const [feedIndex, setFeedIndex] = useState(0);
   const [projectIndex, setProjectIndex] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
-  const [lightboxPhotoId, setLightboxPhotoId] = useState<string | null>(null);
 
   const activeBackground = mode === "feed" ? toImageFromFeedItem(feedItems[feedIndex]) : PROJECTS[projectIndex].heroSrc;
 
@@ -39,11 +38,6 @@ export default function HomePage() {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target && ["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(target.tagName)) {
-        return;
-      }
-
-      if (event.key === "Escape" && lightboxPhotoId) {
-        setLightboxPhotoId(null);
         return;
       }
 
@@ -76,23 +70,7 @@ export default function HomePage() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [feedItems.length, lightboxPhotoId, mode, projectIndex, router]);
-
-  const activePhoto = photoItems.find((photo) => photo.id === lightboxPhotoId) ?? null;
-
-  const stepPhoto = (direction: 1 | -1) => {
-    if (!activePhoto || photoItems.length <= 1) {
-      return;
-    }
-
-    const currentIndex = photoItems.findIndex((photo) => photo.id === activePhoto.id);
-    if (currentIndex < 0) {
-      return;
-    }
-
-    const nextIndex = (currentIndex + direction + photoItems.length) % photoItems.length;
-    setLightboxPhotoId(photoItems[nextIndex].id);
-  };
+  }, [feedItems.length, mode, projectIndex, router]);
 
   return (
     <>
@@ -101,12 +79,7 @@ export default function HomePage() {
       <SitePanelShell mode={mode} onModeChange={setMode} onOpenContact={() => setContactOpen(true)}>
         {mode === "feed" ? (
           <div className={styles.feedPane}>
-            <FeedCarousel
-              items={feedItems}
-              index={feedIndex}
-              onIndexChange={setFeedIndex}
-              onOpenPhoto={(photo) => setLightboxPhotoId(photo.id)}
-            />
+            <FeedCarousel items={feedItems} index={feedIndex} onIndexChange={setFeedIndex} />
 
             <div className={styles.feedMeta}>
               <div className={styles.dots}>
@@ -129,28 +102,6 @@ export default function HomePage() {
           />
         )}
       </SitePanelShell>
-
-      <Modal open={Boolean(activePhoto)} onClose={() => setLightboxPhotoId(null)}>
-        {activePhoto ? (
-          <div className={styles.lightbox}>
-            <div className={styles.lightboxImageWrap}>
-              <Image src={activePhoto.src} alt={activePhoto.alt} fill sizes="(max-width: 1200px) 92vw, 1000px" />
-            </div>
-            <p>
-              {activePhoto.location} • {activePhoto.album}
-              {activePhoto.takenDate ? ` • ${new Date(activePhoto.takenDate).toLocaleDateString()}` : ""}
-            </p>
-            <div className={styles.lightboxActions}>
-              <button type="button" onClick={() => stepPhoto(-1)}>
-                prev
-              </button>
-              <button type="button" onClick={() => stepPhoto(1)}>
-                next
-              </button>
-            </div>
-          </div>
-        ) : null}
-      </Modal>
 
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </>
