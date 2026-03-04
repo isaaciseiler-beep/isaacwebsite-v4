@@ -1,0 +1,29 @@
+{
+  "name": "isaacwebsite-v4",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "gsap": "^3.13.0",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "sass": "^1.80.7",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@types/three": "^0.171.0",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "latest",
+    "typescript": "^5.7.2"
+  }
+}

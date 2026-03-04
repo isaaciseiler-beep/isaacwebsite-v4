@@ -1,0 +1,45 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import ContactModal from "@/components/ContactModal";
+import { SITE } from "@/lib/content";
+import styles from "./page.module.scss";
+
+export default function AboutPage() {
+  const [contactOpen, setContactOpen] = useState(false);
+  const paragraphs = useMemo(
+    () => SITE.aboutMarkdown.split("\n\n").map((paragraph) => paragraph.trim()).filter(Boolean),
+    []
+  );
+
+  return (
+    <div className={styles.page}>
+      <header className={styles.nav}>
+        <Link href="/" className={styles.brand}>
+          ISAAC SEILER
+        </Link>
+
+        <nav>
+          <Link href="/about">About</Link>
+          <Link href="/playground">Playground</Link>
+          <button type="button" onClick={() => setContactOpen(true)}>
+            Contact
+          </button>
+        </nav>
+      </header>
+
+      <main className={styles.main}>
+        <p className={styles.kicker}>About</p>
+        <h1 className={styles.title}>Short bio and current focus.</h1>
+        <div className={styles.copy}>
+          {paragraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+      </main>
+
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
+    </div>
+  );
+}

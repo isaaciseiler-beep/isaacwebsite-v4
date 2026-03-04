@@ -1,0 +1,81 @@
+.feedPane {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.feedMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+
+  p {
+    margin: 0;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+}
+
+.dots {
+  display: inline-flex;
+  gap: 0.26rem;
+
+  span {
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--color-line);
+    display: inline-block;
+
+    &[data-active="true"] {
+      background: #111;
+      border-color: #111;
+    }
+  }
+}
+
+.lightbox {
+  display: grid;
+  gap: 0.75rem;
+
+  p {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.68rem;
+    color: var(--color-muted);
+  }
+}
+
+.lightboxImageWrap {
+  position: relative;
+  width: min(1000px, 92vw);
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.lightboxActions {
+  display: flex;
+  gap: 0.45rem;
+
+  button {
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.68rem;
+
+    &:hover {
+      background: #111;
+      color: #fff;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.cursor {
+  position: fixed;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(12, 12, 12, 0.88);
+  pointer-events: none;
+  z-index: 150;
+  transition: width 0.14s ease, height 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  mix-blend-mode: multiply;
+}
+
+.hovered {
+  width: 18px;
+  height: 18px;
+  left: -9px;
+  top: -9px;
+  border-color: rgba(12, 12, 12, 1);
+  background: rgba(12, 12, 12, 0.06);
+}
+
+.pressed {
+  width: 8px;
+  height: 8px;
+  left: -4px;
+  top: -4px;
+  background: rgba(12, 12, 12, 0.8);
+}

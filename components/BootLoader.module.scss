@@ -1,0 +1,62 @@
+@use "../styles/mixins" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  padding: 1.4rem;
+}
+
+.center {
+  width: min(720px, 100%);
+  text-align: center;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.line {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.88rem, 2.6vw, 1.1rem);
+  letter-spacing: 0.02em;
+}
+
+.percent {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 3vw, 1.3rem);
+}
+
+.helper {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-mono);
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.actions {
+  margin-top: 1.4rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.action {
+  @include subtle-focus;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  padding: 0.68rem 1.02rem;
+  border: 1px solid var(--color-line);
+  background: #fff;
+
+  &:hover,
+  &[data-selected="true"] {
+    background: #111;
+    color: #fff;
+  }
+}

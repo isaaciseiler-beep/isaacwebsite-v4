@@ -1,0 +1,21 @@
+:root {
+  --color-bg: #ffffff;
+  --color-text: #111111;
+  --color-muted: rgba(17, 17, 17, 0.62);
+  --color-line: rgba(17, 17, 17, 0.16);
+  --color-panel: rgba(255, 255, 255, 0.88);
+  --color-panel-strong: rgba(255, 255, 255, 0.95);
+  --color-overlay: rgba(255, 255, 255, 0.9);
+  --color-accent: #050505;
+
+  --font-sans: "Sora", "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 26px;
+
+  --panel-width: min(1180px, calc(100vw - 2.4rem));
+  --shadow-panel: 0 18px 70px rgba(0, 0, 0, 0.12);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
+}

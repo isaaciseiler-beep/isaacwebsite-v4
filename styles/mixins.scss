@@ -1,0 +1,21 @@
+@mixin small-caps {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+@mixin subtle-focus {
+  &:focus-visible {
+    outline: 2px solid rgba(17, 17, 17, 0.78);
+    outline-offset: 2px;
+  }
+}
+
+@mixin glass-panel {
+  border: 1px solid var(--color-line);
+  background: linear-gradient(140deg, var(--color-panel-strong), var(--color-panel));
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(18px);
+}

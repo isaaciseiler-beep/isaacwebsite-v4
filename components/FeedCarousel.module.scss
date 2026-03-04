@@ -1,0 +1,86 @@
+@use "../styles/mixins" as *;
+
+.root {
+  width: min(920px, 100%);
+  display: grid;
+  gap: 0.55rem;
+}
+
+.card {
+  @include subtle-focus;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  padding: 0.7rem;
+  text-align: left;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.chip {
+  @include small-caps;
+  justify-self: start;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.22rem 0.56rem;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.text {
+  display: grid;
+  gap: 0.4rem;
+
+  h3 {
+    margin: 0;
+    font-size: clamp(1rem, 2.5vw, 1.45rem);
+    line-height: 1.12;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    line-height: 1.45;
+  }
+
+  span {
+    @include small-caps;
+    color: var(--color-muted);
+  }
+}
+
+.controls {
+  justify-self: end;
+  display: flex;
+  gap: 0.35rem;
+
+  button {
+    @include subtle-focus;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: #fff;
+
+    &:hover {
+      background: #111;
+      color: #fff;
+    }
+  }
+}
+
+.empty {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
