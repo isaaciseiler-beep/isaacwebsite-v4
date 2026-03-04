@@ -116,6 +116,7 @@ export default function FeedCarousel({ items, index, onIndexChange, onOpenPhoto 
           type="button"
           className={styles.card}
           ref={cardRef}
+          id={`feed-${currentItem.id}`}
           onClick={onPrimaryAction}
           onPointerDown={(event) => {
             pointerStart.current = event.clientX;

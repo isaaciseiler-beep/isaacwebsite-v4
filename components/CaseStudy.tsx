@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Project } from "@/lib/content";
+import { getProjectBlockAnchor, getProjectSummaryAnchor } from "@/lib/search/index";
 import ContactModal from "./ContactModal";
 import styles from "./CaseStudy.module.scss";
 
@@ -13,6 +14,8 @@ type CaseStudyProps = {
   previousSlug: string;
   nextSlug: string;
 };
+
+const CONTACT_EVENT = "site:open-contact";
 
 export default function CaseStudy({ project, previousSlug, nextSlug }: CaseStudyProps) {
   const router = useRouter();
@@ -62,6 +65,15 @@ export default function CaseStudy({ project, previousSlug, nextSlug }: CaseStudy
     return () => window.removeEventListener("wheel", onWheel);
   }, [nextSlug, previousSlug, router]);
 
+  useEffect(() => {
+    const onOpenContact = () => {
+      setContactOpen(true);
+    };
+
+    window.addEventListener(CONTACT_EVENT, onOpenContact);
+    return () => window.removeEventListener(CONTACT_EVENT, onOpenContact);
+  }, []);
+
   return (
     <div className={styles.page}>
       <header className={styles.nav}>
@@ -79,7 +91,7 @@ export default function CaseStudy({ project, previousSlug, nextSlug }: CaseStudy
       </header>
 
       <main className={styles.main}>
-        <section className={styles.hero}>
+        <section className={styles.hero} id={getProjectSummaryAnchor(project.slug)}>
           <h1>{project.title}</h1>
           <p>{project.intro}</p>
           <ul>
@@ -91,9 +103,11 @@ export default function CaseStudy({ project, previousSlug, nextSlug }: CaseStudy
 
         <section className={styles.stream}>
           {project.blocks.map((block, index) => {
+            const blockAnchor = getProjectBlockAnchor(project.slug, index);
+
             if (block.type === "image") {
               return (
-                <div className={styles.single} key={`${project.slug}-image-${index}`}>
+                <div className={styles.single} key={`${project.slug}-image-${index}`} id={blockAnchor}>
                   <Image
                     src={block.src}
                     alt={block.alt ?? project.title}
@@ -107,7 +121,7 @@ export default function CaseStudy({ project, previousSlug, nextSlug }: CaseStudy
 
             if (block.type === "double") {
               return (
-                <div className={styles.double} key={`${project.slug}-double-${index}`}>
+                <div className={styles.double} key={`${project.slug}-double-${index}`} id={blockAnchor}>
                   <Image
                     src={block.left.src}
                     alt={block.left.alt ?? project.title}
@@ -127,7 +141,7 @@ export default function CaseStudy({ project, previousSlug, nextSlug }: CaseStudy
             }
 
             return (
-              <blockquote className={styles.quote} key={`${project.slug}-quote-${index}`}>
+              <blockquote className={styles.quote} key={`${project.slug}-quote-${index}`} id={blockAnchor}>
                 <p>“{block.text}”</p>
                 {block.attribution ? <cite>{block.attribution}</cite> : null}
               </blockquote>

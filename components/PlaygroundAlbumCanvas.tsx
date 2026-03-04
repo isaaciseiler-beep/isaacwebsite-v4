@@ -6,12 +6,15 @@ import { gsap } from "gsap";
 import * as THREE from "three";
 import { Photo } from "@/lib/content";
 import { safeDuration, usePrefersReducedMotion } from "@/lib/motion";
+import { getPhotoAnchor } from "@/lib/search/index";
 import FilterOverlay from "./FilterOverlay";
 import Modal from "./Modal";
 import styles from "./PlaygroundAlbumCanvas.module.scss";
 
 type PlaygroundAlbumCanvasProps = {
   photos: Photo[];
+  initialPhotoId?: string | null;
+  onActivePhotoChange?: (photoId: string | null) => void;
 };
 
 type MeshRecord = {
@@ -42,7 +45,11 @@ const formatDate = (value?: string): string => {
   return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
 };
 
-export default function PlaygroundAlbumCanvas({ photos }: PlaygroundAlbumCanvasProps) {
+export default function PlaygroundAlbumCanvas({
+  photos,
+  initialPhotoId = null,
+  onActivePhotoChange
+}: PlaygroundAlbumCanvasProps) {
   const reduced = usePrefersReducedMotion();
   const canvasHostRef = useRef<HTMLDivElement | null>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -64,9 +71,14 @@ export default function PlaygroundAlbumCanvas({ photos }: PlaygroundAlbumCanvasP
   const targetedIdRef = useRef<string | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [activePhotoId, setActivePhotoId] = useState<string | null>(null);
+  const [activePhotoId, setActivePhotoId] = useState<string | null>(
+    initialPhotoId && photos.some((photo) => photo.id === initialPhotoId) ? initialPhotoId : null
+  );
   const activePhotoIdRef = useRef<string | null>(null);
   const filterOpenRef = useRef(false);
+  const announceTimeoutRef = useRef<number | null>(null);
+  const syncRef = useRef<string | null>(null);
+  const [announcement, setAnnouncement] = useState("");
 
   const selectedLocationsRef = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -97,6 +109,70 @@ export default function PlaygroundAlbumCanvas({ photos }: PlaygroundAlbumCanvasP
     () => filteredPhotos.find((photo) => photo.id === activePhotoId) ?? null,
     [activePhotoId, filteredPhotos]
   );
+
+  useEffect(() => {
+    if (initialPhotoId === activePhotoId) {
+      return;
+    }
+
+    if (!initialPhotoId) {
+      const frame = window.requestAnimationFrame(() => {
+        setActivePhotoId(null);
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    if (photos.some((photo) => photo.id === initialPhotoId)) {
+      const frame = window.requestAnimationFrame(() => {
+        setActivePhotoId(initialPhotoId);
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+  }, [activePhotoId, initialPhotoId, photos]);
+
+  useEffect(() => {
+    if (!onActivePhotoChange) {
+      return;
+    }
+
+    if (syncRef.current === activePhotoId) {
+      return;
+    }
+
+    syncRef.current = activePhotoId;
+    onActivePhotoChange(activePhotoId);
+  }, [activePhotoId, onActivePhotoChange]);
+
+  useEffect(() => {
+    if (!activePhotoId) {
+      return;
+    }
+
+    const anchorId = getPhotoAnchor(activePhotoId);
+    const target = photos.find((photo) => photo.id === activePhotoId);
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(anchorId)?.scrollIntoView({ block: "center" });
+      if (!target) {
+        return;
+      }
+
+      setAnnouncement(`Opened photo ${target.location}`);
+      if (announceTimeoutRef.current) {
+        window.clearTimeout(announceTimeoutRef.current);
+      }
+      announceTimeoutRef.current = window.setTimeout(() => setAnnouncement(""), 1200);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [activePhotoId, photos]);
+
+  useEffect(() => {
+    return () => {
+      if (announceTimeoutRef.current) {
+        window.clearTimeout(announceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -433,7 +509,7 @@ export default function PlaygroundAlbumCanvas({ photos }: PlaygroundAlbumCanvasP
 
       <Modal open={Boolean(activePhoto)} onClose={() => setActivePhotoId(null)} className={styles.modalPanel}>
         {activePhoto ? (
-          <div className={styles.modalBody}>
+          <div className={styles.modalBody} id={getPhotoAnchor(activePhoto.id)}>
             <div className={styles.modalImageWrap}>
               <Image src={activePhoto.src} alt={activePhoto.alt} fill sizes="(max-width: 1200px) 90vw, 1100px" className={styles.modalImage} />
             </div>
@@ -454,6 +530,9 @@ export default function PlaygroundAlbumCanvas({ photos }: PlaygroundAlbumCanvasP
           </div>
         ) : null}
       </Modal>
+      <p className="srOnly" aria-live="polite">
+        {announcement}
+      </p>
     </div>
   );
 }

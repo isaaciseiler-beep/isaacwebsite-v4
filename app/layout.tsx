@@ -3,6 +3,7 @@ import "@/styles/globals.scss";
 import Cursor from "@/components/Cursor";
 import BootLoader from "@/components/BootLoader";
 import MiniRouteLoader from "@/components/MiniRouteLoader";
+import OmniSearch from "@/components/OmniSearch";
 
 export const metadata: Metadata = {
   title: "Isaac Seiler",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <BootLoader>
           <MiniRouteLoader />
           <Cursor />
+          <OmniSearch />
           {children}
         </BootLoader>
       </body>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FeedItem, PROJECTS, getFeedItems } from "@/lib/content";
 import BackgroundCrossfade from "@/components/BackgroundCrossfade";
 import ContactModal from "@/components/ContactModal";
@@ -11,6 +11,7 @@ import SitePanelShell from "@/components/SitePanelShell";
 import styles from "./page.module.scss";
 
 type Mode = "feed" | "projects";
+const CONTACT_EVENT = "site:open-contact";
 
 const toImageFromFeedItem = (item: FeedItem | undefined): string => {
   if (!item) {
@@ -20,19 +21,71 @@ const toImageFromFeedItem = (item: FeedItem | undefined): string => {
   return item.type === "linkedin" ? item.coverSrc : item.src;
 };
 
-export default function HomePage() {
+function HomePageContent() {
   const router = useRouter();
-  const feedItems = useMemo(
-    () => getFeedItems().filter((item): item is FeedItem & { type: "linkedin" } => item.type === "linkedin"),
-    []
-  );
+  const searchParams = useSearchParams();
+  const feedItems = useMemo(() => getFeedItems(), []);
 
   const [mode, setMode] = useState<Mode>("feed");
   const [feedIndex, setFeedIndex] = useState(0);
   const [projectIndex, setProjectIndex] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
 
   const activeBackground = mode === "feed" ? toImageFromFeedItem(feedItems[feedIndex]) : PROJECTS[projectIndex].heroSrc;
+
+  useEffect(() => {
+    const onOpenContact = () => {
+      setContactOpen(true);
+    };
+
+    window.addEventListener(CONTACT_EVENT, onOpenContact);
+    return () => window.removeEventListener(CONTACT_EVENT, onOpenContact);
+  }, []);
+
+  useEffect(() => {
+    if (searchParams.get("contact") !== "open") {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      setContactOpen(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const feedId = searchParams.get("feed");
+    if (!feedId) {
+      return;
+    }
+
+    const indexFromQuery = feedItems.findIndex((item) => item.id === feedId);
+    if (indexFromQuery < 0) {
+      return;
+    }
+
+    const selectedItem = feedItems[indexFromQuery];
+    const label = selectedItem.type === "linkedin" ? selectedItem.title : selectedItem.location;
+    const frame = window.requestAnimationFrame(() => {
+      setMode("feed");
+      setFeedIndex(indexFromQuery);
+      setAnnouncement(`Opened feed item ${label}`);
+      document.getElementById(`feed-${feedId}`)?.scrollIntoView({ block: "center" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [feedItems, searchParams]);
+
+  useEffect(() => {
+    if (!announcement) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setAnnouncement(""), 1200);
+    return () => window.clearTimeout(timeout);
+  }, [announcement]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -79,7 +132,12 @@ export default function HomePage() {
       <SitePanelShell mode={mode} onModeChange={setMode} onOpenContact={() => setContactOpen(true)}>
         {mode === "feed" ? (
           <div className={styles.feedPane}>
-            <FeedCarousel items={feedItems} index={feedIndex} onIndexChange={setFeedIndex} />
+            <FeedCarousel
+              items={feedItems}
+              index={feedIndex}
+              onIndexChange={setFeedIndex}
+              onOpenPhoto={(photo) => router.push(`/playground?photo=${encodeURIComponent(photo.id)}`)}
+            />
 
             <div className={styles.feedMeta}>
               <div className={styles.dots}>
@@ -103,7 +161,19 @@ export default function HomePage() {
         )}
       </SitePanelShell>
 
+      <span id="contact" className="srOnly" aria-hidden="true" />
+      <p className="srOnly" aria-live="polite">
+        {announcement}
+      </p>
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomePageContent />
+    </Suspense>
   );
 }
