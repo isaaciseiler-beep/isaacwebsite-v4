@@ -265,7 +265,7 @@ export default function OmniSearch() {
 
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<Tab>("search");
+  const [tab, setTab] = useState<Tab>("ask");
 
   const [typeChips, setTypeChips] = useState<Record<TypeChipKey, boolean>>(DEFAULT_CHIPS);
   const [photoLocationFilter, setPhotoLocationFilter] = useState("");
@@ -558,6 +558,7 @@ export default function OmniSearch() {
 
   const openDrawer = useCallback(() => {
     setMounted(true);
+    setTab("ask");
     setOpen(true);
     void loadIndex();
   }, [loadIndex]);
@@ -575,8 +576,8 @@ export default function OmniSearch() {
         node,
         {
           autoAlpha: 0,
-          y: reducedMotion ? 0 : 18,
-          scaleY: reducedMotion ? 1 : 0.92,
+          y: 0,
+          scaleY: reducedMotion ? 1 : 0.35,
           transformOrigin: "bottom center"
         },
         {
@@ -593,8 +594,8 @@ export default function OmniSearch() {
 
     const tween = gsap.to(node, {
       autoAlpha: 0,
-      y: reducedMotion ? 0 : 12,
-      scaleY: reducedMotion ? 1 : 0.92,
+      y: 0,
+      scaleY: reducedMotion ? 1 : 0.35,
       duration: safeDuration(0.2, reducedMotion),
       ease: "power1.out",
       onComplete: () => {
@@ -965,20 +966,17 @@ export default function OmniSearch() {
           <div className={styles.tabRow}>
             <button
               type="button"
-              className={classNames(styles.tab, tab === "search" && styles.activeTab)}
-              onClick={() => setTab("search")}
-            >
-              Search
-            </button>
-            <button
-              type="button"
               className={classNames(styles.tab, tab === "ask" && styles.activeTab)}
               onClick={() => setTab("ask")}
             >
               Ask
             </button>
-            <button type="button" className={styles.closeButton} onClick={closeDrawer} aria-label="Close search drawer">
-              Esc
+            <button
+              type="button"
+              className={classNames(styles.tab, tab === "search" && styles.activeTab)}
+              onClick={() => setTab("search")}
+            >
+              Search
             </button>
           </div>
 
@@ -1168,7 +1166,7 @@ export default function OmniSearch() {
       <button
         ref={triggerRef}
         type="button"
-        className={styles.trigger}
+        className={classNames(styles.trigger, mounted && styles.triggerOpen)}
         onClick={() => {
           if (open) {
             closeDrawer();
@@ -1180,8 +1178,8 @@ export default function OmniSearch() {
         aria-expanded={open}
       >
         <span aria-hidden="true">✦</span>
-        <span>AI</span>
-        <kbd>⌘K</kbd>
+        <span>{open ? "Close" : "AI"}</span>
+        <kbd>{open ? "Esc" : "⌘K"}</kbd>
       </button>
     </div>
   );

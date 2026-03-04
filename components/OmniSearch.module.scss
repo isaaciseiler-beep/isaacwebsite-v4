@@ -1,11 +1,13 @@
 @use "../styles/mixins" as *;
 
 .root {
+  --omni-width: min(760px, calc(100vw - 0.6rem));
   position: fixed;
-  inset: auto 0 16px;
+  inset: auto 0 0;
   z-index: 88;
   display: grid;
   justify-items: center;
+  align-items: end;
   pointer-events: none;
 }
 
@@ -17,15 +19,16 @@
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   padding: 0.58rem 0.9rem;
-  min-height: 46px;
+  min-height: 44px;
+  width: auto;
   display: inline-flex;
   align-items: center;
   gap: 0.48rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: width 0.22s ease, border-radius 0.22s ease, transform 0.18s ease, box-shadow 0.18s ease;
 
   &:hover {
     transform: translateY(-1px);
@@ -42,25 +45,46 @@
   }
 }
 
+.triggerOpen {
+  width: var(--omni-width);
+  min-height: 52px;
+  border-radius: 0;
+  border-top: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+  border-right: 1px solid var(--color-line);
+  border-bottom: 0;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  justify-content: center;
+
+  &:hover {
+    transform: none;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
 .drawer {
   @include glass-panel;
   pointer-events: auto;
-  width: min(920px, calc(100vw - 1.2rem));
-  max-height: min(78svh, 740px);
-  border-radius: 22px;
+  width: var(--omni-width);
+  height: min(38svh, 360px);
+  max-height: min(38svh, 360px);
+  border-radius: 24px 24px 0 0;
   overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
-  margin-bottom: 0.58rem;
+  border-bottom: 0;
+  box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.1);
 }
 
 .tabRow {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.54rem;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.42rem 0.48rem;
   border-bottom: 1px solid var(--color-line);
-  background: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .tab {
@@ -71,8 +95,8 @@
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.11em;
-  min-height: 38px;
-  padding: 0 0.8rem;
+  min-height: 34px;
+  padding: 0 0.72rem;
   color: rgba(17, 17, 17, 0.58);
 }
 
@@ -80,19 +104,6 @@
   border-color: var(--color-line);
   background: #fff;
   color: #111;
-}
-
-.closeButton {
-  @include subtle-focus;
-  margin-left: auto;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: #fff;
-  min-height: 38px;
-  padding: 0 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-size: 0.61rem;
 }
 
 .searchPane,
@@ -289,7 +300,7 @@
 
 .askPane {
   grid-template-rows: 1fr auto;
-  min-height: min(58svh, 560px);
+  min-height: 0;
 }
 
 .chatStream {
@@ -435,12 +446,12 @@
 
 @media (max-width: 740px) {
   .root {
-    inset: auto 0 10px;
+    --omni-width: calc(100vw - 0.3rem);
   }
 
   .drawer {
-    width: calc(100vw - 0.7rem);
-    max-height: 82svh;
+    height: min(44svh, 390px);
+    max-height: min(44svh, 390px);
   }
 
   .trigger {
