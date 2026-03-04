@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.scss";
-import Cursor from "@/components/Cursor";
 import BootLoader from "@/components/BootLoader";
 import MiniRouteLoader from "@/components/MiniRouteLoader";
 import OmniSearch from "@/components/OmniSearch";
@@ -17,7 +16,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <BootLoader>
           <MiniRouteLoader />
-          <Cursor />
           <OmniSearch />
           {children}
         </BootLoader>

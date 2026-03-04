@@ -1,0 +1,72 @@
+@use "../styles/mixins" as *;
+
+.wrap {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.source {
+  @include small-caps;
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  line-height: 1.12;
+}
+
+.paragraph {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+
+  h3 {
+    margin: 0;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--color-muted);
+  }
+}
+
+.bullets {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.3rem;
+
+  li {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+}
+
+.links {
+  display: grid;
+  gap: 0.32rem;
+
+  a {
+    font-size: 0.78rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

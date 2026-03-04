@@ -1,11 +1,11 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { FeedItem, PROJECTS, getFeedItems } from "@/lib/content";
-import BackgroundCrossfade from "@/components/BackgroundCrossfade";
+import { useSearchParams } from "next/navigation";
+import { FeedItem, LINKEDIN_POSTS, PROJECT_CAROUSEL_ITEMS } from "@/lib/content";
 import ContactModal from "@/components/ContactModal";
 import FeedCarousel from "@/components/FeedCarousel";
+import ProjectPopup from "@/components/ProjectPopup";
 import ProjectsList from "@/components/ProjectsList";
 import SitePanelShell from "@/components/SitePanelShell";
 import styles from "./page.module.scss";
@@ -13,26 +13,16 @@ import styles from "./page.module.scss";
 type Mode = "feed" | "projects";
 const CONTACT_EVENT = "site:open-contact";
 
-const toImageFromFeedItem = (item: FeedItem | undefined): string => {
-  if (!item) {
-    return PROJECTS[0]?.heroSrc ?? "/assets/photos/photo-01.jpg";
-  }
-
-  return item.type === "linkedin" ? item.coverSrc : item.src;
-};
-
 function HomePageContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const feedItems = useMemo(() => getFeedItems(), []);
+  const feedItems = useMemo<FeedItem[]>(() => LINKEDIN_POSTS.map((item) => ({ ...item, type: "linkedin" as const })), []);
 
   const [mode, setMode] = useState<Mode>("feed");
   const [feedIndex, setFeedIndex] = useState(0);
   const [projectIndex, setProjectIndex] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
+  const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
-
-  const activeBackground = mode === "feed" ? toImageFromFeedItem(feedItems[feedIndex]) : PROJECTS[projectIndex].heroSrc;
 
   useEffect(() => {
     const onOpenContact = () => {
@@ -108,27 +98,27 @@ function HomePageContent() {
       if (mode === "projects") {
         if (event.key === "ArrowUp") {
           event.preventDefault();
-          setProjectIndex((previous) => (previous - 1 + PROJECTS.length) % PROJECTS.length);
+          setProjectIndex((previous) => (previous - 1 + PROJECT_CAROUSEL_ITEMS.length) % PROJECT_CAROUSEL_ITEMS.length);
         }
         if (event.key === "ArrowDown") {
           event.preventDefault();
-          setProjectIndex((previous) => (previous + 1) % PROJECTS.length);
+          setProjectIndex((previous) => (previous + 1) % PROJECT_CAROUSEL_ITEMS.length);
         }
         if (event.key === "Enter") {
           event.preventDefault();
-          router.push(`/case-study/${PROJECTS[projectIndex].slug}`);
+          setActiveProjectSlug(PROJECT_CAROUSEL_ITEMS[projectIndex].slug);
         }
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [feedItems.length, mode, projectIndex, router]);
+  }, [feedItems.length, mode, projectIndex]);
+
+  const activeProject = PROJECT_CAROUSEL_ITEMS.find((project) => project.slug === activeProjectSlug) ?? null;
 
   return (
     <>
-      <BackgroundCrossfade imageSrc={activeBackground} />
-
       <SitePanelShell mode={mode} onModeChange={setMode} onOpenContact={() => setContactOpen(true)}>
         {mode === "feed" ? (
           <div className={styles.feedPane}>
@@ -136,7 +126,6 @@ function HomePageContent() {
               items={feedItems}
               index={feedIndex}
               onIndexChange={setFeedIndex}
-              onOpenPhoto={(photo) => router.push(`/playground?photo=${encodeURIComponent(photo.id)}`)}
             />
 
             <div className={styles.feedMeta}>
@@ -153,10 +142,10 @@ function HomePageContent() {
           </div>
         ) : (
           <ProjectsList
-            projects={PROJECTS}
+            projects={PROJECT_CAROUSEL_ITEMS}
             selectedIndex={projectIndex}
             onSelect={setProjectIndex}
-            onOpenProject={(slug) => router.push(`/case-study/${slug}`)}
+            onOpenProject={(slug) => setActiveProjectSlug(slug)}
           />
         )}
       </SitePanelShell>
@@ -165,6 +154,7 @@ function HomePageContent() {
       <p className="srOnly" aria-live="polite">
         {announcement}
       </p>
+      <ProjectPopup project={activeProject} onClose={() => setActiveProjectSlug(null)} />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </>
   );

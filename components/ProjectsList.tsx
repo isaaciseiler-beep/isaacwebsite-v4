@@ -1,10 +1,10 @@
 "use client";
 
-import { Project } from "@/lib/content";
+import { ProjectCarouselItem } from "@/lib/content";
 import styles from "./ProjectsList.module.scss";
 
 type ProjectsListProps = {
-  projects: Project[];
+  projects: ProjectCarouselItem[];
   selectedIndex: number;
   onSelect: (index: number) => void;
   onOpenProject: (slug: string) => void;
@@ -26,7 +26,7 @@ export default function ProjectsList({ projects, selectedIndex, onSelect, onOpen
           </button>
 
           <div className={styles.meta}>
-            <p>{project.roles.join(" • ")}</p>
+            <p>{project.source}</p>
             <button type="button" className={styles.openButton} onClick={() => onOpenProject(project.slug)}>
               open project
             </button>

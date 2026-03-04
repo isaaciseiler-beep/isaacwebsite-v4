@@ -8,6 +8,8 @@ export type Project = {
   title: string;
   intro: string;
   roles: string[];
+  sourceLabel?: string;
+  cardImage?: string;
   heroSrc: string;
   blocks: ProjectBlock[];
   links?: { label: string; url: string }[];
@@ -27,11 +29,19 @@ export type Photo = {
 export type LinkedInPost = {
   id: string;
   title: string;
+  source?: string;
   date: string;
   url: string;
   excerpt: string;
   coverSrc: string;
   featured?: boolean;
+};
+
+export type ProjectPopupContent = {
+  paragraphs: string[];
+  sectionTitles: string[];
+  bullets: string[];
+  links: { label: string; href: string }[];
 };
 
 export type FeedItem =
@@ -55,108 +65,119 @@ export const LINKEDIN_POSTS: LinkedInPost[] = [
   {
     id: "linkedin-01",
     title: "Authored Substack Post on Education for OpenAI",
+    source: "ChatGPT for Education",
     date: "2025-08-05",
     url: "https://edunewsletter.openai.com/p/top-chats-from-the-fulbright-taiwan",
     excerpt:
       "A practical reflection on higher education, AI literacy, and what students actually ask when AI becomes part of daily learning.",
-    coverSrc: "/assets/feed/linkedin/post-01.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/chatlab.jpg",
     featured: true
   },
   {
     id: "linkedin-02",
     title: "Testimonial Featured in ChatGPT Pulse Launch",
+    source: "OpenAI",
     date: "2025-09-17",
     url: "https://openai.com/index/introducing-chatgpt-pulse/",
     excerpt:
       "Included in the launch story for ChatGPT Pulse, sharing perspective on experimentation and user-led research in education.",
-    coverSrc: "/assets/feed/linkedin/post-02.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/pulse.jpg",
     featured: true
   },
   {
     id: "linkedin-03",
-    title: "Study Mode Spotlight on ChatGPT Instagram",
+    title: "Study Mode Spotlight on ChatGPT's Instagram",
+    source: "OpenAI",
     date: "2025-07-29",
     url: "https://www.instagram.com/chatgpt/reel/DNyG5VvXEZM/",
     excerpt:
       "Featured in the Study Mode spotlight, focused on workflows for inquiry, revision, and applied classroom use.",
-    coverSrc: "/assets/feed/linkedin/post-03.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/study-mode.jpg",
     featured: true
   },
   {
     id: "linkedin-04",
     title: "Won 2024 Truman Scholarship",
+    source: "Washington University in St. Louis",
     date: "2024-04-13",
     url: "https://source.washu.edu/2024/04/junior-seiler-awarded-truman-scholarship/",
     excerpt:
       "Recognition for policy work, civic leadership, and long-term public service impact at Washington University in St. Louis.",
-    coverSrc: "/assets/feed/linkedin/post-04.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/truman.jpg",
     featured: true
   },
   {
     id: "linkedin-05",
     title: "Co-Authored 100 Chats Project with the ChatGPT Lab",
+    source: "OpenAI",
     date: "2025-06-19",
     url: "https://chatgpt.com/100chats-project",
     excerpt:
       "A co-authored project documenting how real people use conversational AI for work, learning, and difficult decisions.",
-    coverSrc: "/assets/feed/linkedin/post-05.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/100chats.jpg",
     featured: true
   },
   {
     id: "linkedin-06",
     title: "Named 2024 Rhodes Scholarship Finalist",
+    source: "Washington University in St. Louis",
     date: "2024-11-10",
     url: "https://source.washu.edu/2024/11/seniors-darden-seiler-were-rhodes-scholars-finalists/",
     excerpt:
       "Recognized as a Rhodes finalist while continuing policy, communication, and research work across institutions.",
-    coverSrc: "/assets/feed/linkedin/post-06.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/rhodes.jpg",
     featured: true
   },
   {
     id: "linkedin-07",
     title: "Won Fulbright Award to Taiwan",
+    source: "Washington University in St. Louis",
     date: "2025-06-01",
     url: "https://source.wustl.edu/2025/06/several-alumni-earn-fulbright-awards/",
     excerpt:
       "Awarded Fulbright support for field research in Taiwan around internet infrastructure and AI social adoption.",
-    coverSrc: "/assets/feed/linkedin/post-07.jpg",
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/fulbright.jpg",
     featured: true
   },
   {
     id: "linkedin-08",
     title: "Truman Scholarship Interview",
+    source: "Student Life",
     date: "2024-04-24",
     url: "https://www.studlife.com/news/2024/04/24/isaac-seiler-named-truman-scholar",
     excerpt:
       "A campus interview focused on motivations, process, and the policy commitments behind the Truman application.",
-    coverSrc: "/assets/feed/linkedin/post-08.jpg"
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/trumanisaac.jpg"
   },
   {
     id: "linkedin-09",
     title: "60 Truman Scholars Announced (2024)",
+    source: "Forbes",
     date: "2024-04-13",
     url: "https://www.forbes.com/sites/michaeltnietzel/2024/04/13/the-truman-scholars-for-2024-are-announced/",
     excerpt:
       "National announcement of the 2024 Truman Scholars cohort across U.S. universities and public-interest disciplines.",
-    coverSrc: "/assets/feed/linkedin/post-09.jpg"
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/harrytruman.jpg"
   },
   {
     id: "linkedin-10",
     title: "Won Award for Best College Newspaper Photography",
+    source: "Missouri College Media Awards",
     date: "2025-05-22",
     url: "https://source.washu.edu/2025/05/student-life-wins-best-newspaper-honor-at-missouri-college-media-awards/",
     excerpt:
       "Statewide journalism recognition tied to student reporting, visuals, and newsroom collaboration.",
-    coverSrc: "/assets/feed/linkedin/post-10.jpg"
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/washuspring.png"
   },
   {
     id: "linkedin-11",
     title: "University Profile",
+    source: "Washington University in St. Louis",
     date: "2025-03-15",
     url: "https://artsci.washu.edu/ampersand/isaac-seiler-setting-his-sights-high",
     excerpt:
       "Profile feature on cross-sector work spanning journalism, policy, civic communication, and emerging technology.",
-    coverSrc: "/assets/feed/linkedin/post-11.jpg"
+    coverSrc: "https://pub-41d52824b0bb4f44898c39e1c3c63cb8.r2.dev/press/wustl.jpg"
   }
 ];
 
@@ -748,6 +769,296 @@ export const PROJECTS: Project[] = [
 ];
 
 export const FEATURED_FEED_PICKS: Array<{ type: "linkedin" | "photo"; id: string }> = [];
+
+export type ProjectCarouselItem = {
+  slug: string;
+  title: string;
+  source: string;
+  cardImage: string;
+  coverImage: string;
+  insideImage: string;
+  modalContent: ProjectPopupContent;
+};
+
+export const PROJECT_CAROUSEL_ITEMS: ProjectCarouselItem[] = [
+  {
+    slug: "artificial-intelligence-in-state-government-index",
+    title: "Artificial Intelligence in State Government Index",
+    source: "RESEARCH",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/9.aiindex.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/9.aiindexbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/9.aiindexbanner.png",
+    modalContent: {
+      paragraphs: [
+        "This work, published with the Council of State Governments, translates the GenAI hype cycle into a measurable picture of how state and territory governments are actually responding.",
+        "The headline result was stark: most states scored below 50/100, and only a small handful cleared 80."
+      ],
+      sectionTitles: ["What I Built", "Final Products"],
+      bullets: [
+        "GenAI Preparedness Score with 15 verifiable criteria.",
+        "Composite scoring model combining preparedness and efficiency.",
+        "State-by-state analysis tiers and implementation roadmap."
+      ],
+      links: [
+        { label: "Council of State Governments", href: "https://www.csg.org/" },
+        {
+          label: "The GenAI Benchmark",
+          href: "https://docs.google.com/spreadsheets/d/1BhOYYJF75hnKdcfi5IejWD8tHovsdnay/edit?usp=sharing&ouid=107923489516143255873&rtpof=true&sd=true"
+        },
+        {
+          label: "Study Methodology and Background",
+          href: "https://docs.google.com/document/d/1jvnT2yJo47LchswQmj4DRZGEHYOoMGZB/edit"
+        },
+        {
+          label: "Recommendations to State Lawmakers",
+          href: "https://docs.google.com/document/d/1z1hLEEtHXN6JlZp3XSpEGSV2wMdmoTHD/edit"
+        },
+        {
+          label: "Executive Summary Presentation",
+          href: "https://docs.google.com/presentation/d/1jAaItGFd-F7s-wUSZRsxjfbmZnqmAT5V/edit?slide=id.p1#slide=id.p1"
+        }
+      ]
+    }
+  },
+  {
+    slug: "congressional-office-setup-100-day-report",
+    title: "Congressional Office Setup and 100 Day Report",
+    source: "WORK",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/1.congressionaloffice.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/1.ushouse.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/1.ushouse.png",
+    modalContent: {
+      paragraphs: [
+        "This report captures the work I led to stand up a brand-new congressional office from zero and benchmark its first 100 days of operation.",
+        "I led office-wide metrics collection, report design, and release coordination."
+      ],
+      sectionTitles: ["My Contributions", "Final Products"],
+      bullets: [
+        "Building core office infrastructure and workflows",
+        "Hiring and recruiting process direction",
+        "Tracking early performance benchmarks"
+      ],
+      links: [
+        {
+          label: "100 Day Report Executive Summary",
+          href: "https://drive.google.com/file/d/1gdSr7RjjmidqJkLTWkyIbesVPIkECizn/view"
+        }
+      ]
+    }
+  },
+  {
+    slug: "senior-thesis-local-journalism",
+    title: "AI, Digital Platforms, and Journalism Research",
+    source: "RESEARCH",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/2.thesis.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/2.thesisbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/2.thesisbanner.png",
+    modalContent: {
+      paragraphs: [
+        "My senior thesis analyzes structural decline of local journalism in Australia and democratic accountability implications.",
+        "I designed and executed the research end-to-end across interviews, coding, and thematic analysis."
+      ],
+      sectionTitles: ["Core Outputs", "Final Products"],
+      bullets: [
+        "Original qualitative dataset of 17 semi-structured interviews.",
+        "Business model and policy intervention analysis."
+      ],
+      links: [
+        {
+          label:
+            "Final Thesis Draft: Holding the Line: Local Journalists' Experiences Amidst Economic Crisis and Digital Transformation in Australia's News Ecosystem",
+          href: "https://drive.google.com/file/d/1Z6-RR1Zw7z2RieJwVHdk0yOtycRIN1ia/view?usp=sharing"
+        }
+      ]
+    }
+  },
+  {
+    slug: "electric-vehicle-access-analysis",
+    title: "Electric Vehicle Charging Access Analysis",
+    source: "RESEARCH",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/3.ev.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/3.evbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/3.evbanner.png",
+    modalContent: {
+      paragraphs: [
+        "This project used GIS and quantitative analysis to examine EV infrastructure and access patterns.",
+        "The project concluded that income and racial identity did not have significant spatial relationship to charger access in the analyzed sample."
+      ],
+      sectionTitles: ["Key Takeaways", "Final Products"],
+      bullets: [
+        "Very weak race/income spatial relationships in results.",
+        "Regional policy and urban-rural differences drive charger deserts."
+      ],
+      links: [
+        { label: "Initial Report", href: "https://drive.google.com/file/d/11lfGLY0n4XqNRCgFE3Yk_ph7zb2OlH3d/view?usp=sharing" },
+        {
+          label: "Presentation Poster with Spatial Analysis",
+          href: "https://drive.google.com/file/d/1a8RYeorbJRYYcGRrFKe6x2rKmQMft95j/view?usp=sharing"
+        }
+      ]
+    }
+  },
+  {
+    slug: "communications-consultancy-supporting-local-candidates",
+    title: "Communications Consultancy and Supporting Local Candidates",
+    source: "WORK",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/7.consultancy.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/7.consultbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/7.consultbanner.png",
+    modalContent: {
+      paragraphs: [
+        "I founded my own consultancy supporting local and federal candidates with digital and communications assets.",
+        "I led website strategy, social messaging, and rapid-response communications."
+      ],
+      sectionTitles: ["Scope of Work", "Final Products"],
+      bullets: ["Website strategy and execution", "Rapid-response support", "Campaign narrative advising"],
+      links: [{ label: "Allyson's Campaign Website", href: "https://www.allysonfortustin.com/" }]
+    }
+  },
+  {
+    slug: "fulbright-focus-group-sponsored-by-openai",
+    title: "Fulbright Focus Group Sponsored by OpenAI",
+    source: "Project",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/6.cgptlab.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/6.chatlabbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/6.chatlabbanner.png",
+    modalContent: {
+      paragraphs: [
+        "I founded and led the Fulbright Taiwan ChatGPT Lab, the first educator-focused lab of its kind supported by OpenAI.",
+        "The Lab produced practical AI use cases and a published Substack summary."
+      ],
+      sectionTitles: ["Key Components of the Lab", "Final Products"],
+      bullets: ["Co-developed structure with OpenAI", "Facilitated six sessions", "Produced nine practical educator use cases"],
+      links: [
+        { label: "Substack Post", href: "https://edunewsletter.openai.com/p/top-chats-from-the-fulbright-taiwan" },
+        {
+          label: "Fulbright Taiwan ChatGPT Lab Notion Page",
+          href: "https://notion.so/ChatGPT-Lab-x-Fulbright-Taiwan-261aaef174d680579138e8c1c658ab41"
+        },
+        {
+          label: "PowerPoint Introduction to the Lab",
+          href: "https://docs.google.com/presentation/d/1ZqOp_1KQte52BNBR5OBmOJThCufkNnBtVLBhNW_rkps/edit?slide=id.g38cd4d0aa4c_0_33#slide=id.g38cd4d0aa4c_0_33"
+        }
+      ]
+    }
+  },
+  {
+    slug: "political-reporting-at-washu",
+    title: "Political Reporting at WashU",
+    source: "REPORTING",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/10.washureport.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/10.studlifebanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/10.studlifebanner.png",
+    modalContent: {
+      paragraphs: [
+        "As a student journalist, I covered politics and power on campus where institutional authority and activism intersected."
+      ],
+      sectionTitles: ["Coverage Links"],
+      bullets: [],
+      links: [
+        {
+          label: "In front of ‘Disorienting’: Suspended student protesters speak out",
+          href: "https://www.studlife.com/news/2024/09/18/disorienting-suspended-student-protesters-speak-out"
+        },
+        {
+          label: "WashU ABS respond to racist text messages after election, discuss combating hate",
+          href: "https://www.studlife.com/news/2024/12/04/washu-abs-respond-to-racist-text-messages-after-election-discuss-combating-hate"
+        }
+      ]
+    }
+  },
+  {
+    slug: "boehringer-cares-foundation-rebrand-strategy-shift",
+    title: "Boehringer Cares Foundation Rebrand and Strategy Shift",
+    source: "WORK",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/5.bicf.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/5.bicfbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/5.bicfbanner.png",
+    modalContent: {
+      paragraphs: [
+        "At Boehringer Cares, I helped lead a full rebrand including visual design and a broader strategic redirect."
+      ],
+      sectionTitles: ["Major Contributions", "Final Products"],
+      bullets: [
+        "Revamping Brand and Strategy",
+        "Website and UX Redesign",
+        "Increasing Internal Engagement"
+      ],
+      links: [
+        {
+          label: "Revamped Boehringer Cares Website",
+          href: "https://www.boehringer-ingelheim.com/us/boehringer-ingelheim-cares-foundation"
+        }
+      ]
+    }
+  },
+  {
+    slug: "2022-institute-for-nonprofit-news-index-survey",
+    title: "The 2022 Institute for Nonprofit News Index Survey",
+    source: "RESEARCH",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/8.inn.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/8.innbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/8.innbanner.png",
+    modalContent: {
+      paragraphs: [
+        "As a research assistant on the INN Index, I contributed to both qualitative and quantitative project components."
+      ],
+      sectionTitles: ["Key Contributions", "Final Products"],
+      bullets: ["Data Collection and Database Management", "Direct Stakeholder Engagement"],
+      links: [{ label: "2022 INN Index Report", href: "https://inn.org/research/inn-index/inn-index-2022/about-the-index/" }]
+    }
+  },
+  {
+    slug: "exclusive-interview-with-high-visibility-congressperson",
+    title: "Exclusive Interview with High-Visibility Congressperson",
+    source: "REPORTING",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/11.calvinreport.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/11.chimesbanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/11.chimesbanner.png",
+    modalContent: {
+      paragraphs: [
+        "My reporting for The Calvin Chimes focused on then-Congressman Peter Meijer during a volatile post-impeachment period."
+      ],
+      sectionTitles: ["Coverage Links"],
+      bullets: [],
+      links: [
+        {
+          label: "Rep. Meijer defends filibuster, merit-based immigration, vote for impeachment",
+          href: "https://calvinchimes.org/2021/04/08/rep-meijer-defends-filibuster-merit-based-immigration-vote-for-impeachment/"
+        },
+        {
+          label: "Rep. Meijer faces censures, primary challenge over impeachment vote",
+          href: "https://calvinchimes.org/2021/02/24/rep-meijer-faces-censures-primary-challenge-over-impeachment-vote/"
+        }
+      ]
+    }
+  },
+  {
+    slug: "sustainable-development-health-access-report",
+    title: "Sustainable Development and Health Access Report",
+    source: "Project",
+    cardImage: "https://pub-b7a958248070423db848a79644c934ea.r2.dev/4.healthaccess.jpg",
+    coverImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/4.bibanner.png",
+    insideImage: "https://pub-176caad97cac44369ba9cef0291eb27d.r2.dev/4.bibanner.png",
+    modalContent: {
+      paragraphs: [
+        "While working at Boehringer Ingelheim, part of my work was to shape strategy and narrative around health access policies."
+      ],
+      sectionTitles: ["More Information"],
+      bullets: [],
+      links: [
+        {
+          label: "SDX Brandon Hall Group Award Announcement",
+          href: "https://www.boehringer-ingelheim.com/us/about-us/sustainable-development/more-potential/boehringer-wins-10-brandon-hall-group-awards"
+        },
+        {
+          label: "Boehringer's Sustainable Development Strategy",
+          href: "https://www.boehringer-ingelheim.com/us/about-us/sustainable-development"
+        }
+      ]
+    }
+  }
+];
 
 const toTime = (value?: string): number => {
   if (!value) {
